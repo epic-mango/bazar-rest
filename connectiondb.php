@@ -73,7 +73,7 @@ class ConnectionDB
             try{
             $stmt->bindValue(':'.$field, $value);
             }catch(Exception $e){
-                
+
             }
         }
         //echo $sql;

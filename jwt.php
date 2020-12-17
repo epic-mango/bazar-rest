@@ -1,7 +1,7 @@
 <?php
 class JWT{
 
-    public static function create(array $data, $secret_key, $expire = 3600){
+    public static function create(array $data, $secret_key, $expire = 99999){
         $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
         $time = time();
         $values = array(
