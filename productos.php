@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         isset($_POST['nombre']) &&
         isset($_POST['precioCompra']) &&
         isset($_POST['precioVenta']) &&
-        isset($_FILES['imagen'])
+        isset($_POST['imagen'])
     ) {
         $productos = new DataBase('productos');
         $datos = array(
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'nombre' => $_POST['nombre'],
             'precioCompra' => $_POST['precioCompra'],
             'precioVenta' => $_POST['precioVenta'],
-            'imagen' => $_FILES['imagen'],
+            'imagen' => $_POST['imagen'],
             'venta' => null
         );
 
@@ -53,6 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $res = array('resultado' => 'error', 'mensaje' => 'Faltan datos');
     }
 
-    //   header("HTTP/1.1 200 OK");
+    //header("HTTP/1.1 200 OK");
     echo json_encode($res);
+} else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $productos = new DataBase('productos');
+    $res = $productos->readAll();
+
+    for ($i = 0; $i < count($res); $i++) {
+        $res[$i]['imagen'] = $res[$i]['imagen'];
+    }
+
+    $out = json_encode($res);
+
+    header("HTTP/1.1 200 OK");
+    echo ($out);
 }
