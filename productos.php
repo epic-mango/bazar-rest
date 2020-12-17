@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         );
 
-        if ($_GET['venta'] != "null")
+        if ($_GET['venta'] != "null" && $_GET['venta'] != "undefined" )
             $datos['venta'] = $_GET['venta'];
 
         $productos->update($datos, $where);
@@ -83,6 +83,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 401 Bad Request");
         $res = array('resultado' => 'error', 'mensaje' => 'No se recibió la información necesaria');
     }
+} else if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    if (isset($_GET['id'])) {
+        $productos = new DataBase('productos');
+        $where = array('id' => $_GET['id']);
+        $cantidad = $productos->delete($where);
+
+        $res = array('resultado' => 'eliminado', 'mensaje' => 'Eliminado correctamente', 'cantidad' => $cantidad);
+        header("HTTP/1.1 200 OK");
+    } else {
+        header("HTTP/1.1 401 Bad Request");
+
+        $res = array('resultado' => 'error', 'mensaje' => 'Faltan datos');
+    }
+} else {
+    header("HTTP/1.1 401 Bad Request");
+    $res = array('resultado' => 'error', 'mensaje' => 'No es un método conocido');
 }
 
 echo json_encode($res);
