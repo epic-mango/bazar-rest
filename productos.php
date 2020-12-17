@@ -66,10 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $datos = array(
             'nombre' => $_GET['nombre'],
             'precioCompra' => $_GET['precioCompra'],
-            'precioVenta' => $_GET['precioVenta'],
+            'precioVenta' => $_GET['precioVenta']
             //'imagen' => $_GET['imagen'],
-            'venta' => $_GET['venta']
+
         );
+
+        if ($_GET['venta'] != "null")
+            $datos['venta'] = $_GET['venta'];
 
         $productos->update($datos, $where);
 
@@ -78,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("HTTP/1.1 200 OK");
     } else {
         header("HTTP/1.1 401 Bad Request");
-        $res = array('resultado'=>'error','mensaje'=>'No se recibió la información necesaria');
+        $res = array('resultado' => 'error', 'mensaje' => 'No se recibió la información necesaria');
     }
 }
 
