@@ -45,26 +45,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         try {
             $reg =  $productos->create($datos);
-            $res = array('resultado' => 'insertado', 'mensaje' => 'Se gardó el tema', 'id' => $reg);
+            $res = array('resultado' => 'insertado', 'mensaje' => 'Se guardó el producto', 'id' => $reg);
         } catch (PDOException $e) {
             $res = array('resultado' => 'error', 'mensaje' => $e->getMessage());
         }
     } else {
+        header("HTTP/1.1 401 Bad Request");
         $res = array('resultado' => 'error', 'mensaje' => 'Faltan datos');
     }
 
-    //header("HTTP/1.1 200 OK");
-    echo json_encode($res);
+    header("HTTP/1.1 200 OK");
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $productos = new DataBase('productos');
     $res = $productos->readAll();
-
-    for ($i = 0; $i < count($res); $i++) {
-        $res[$i]['imagen'] = $res[$i]['imagen'];
-    }
-
-    $out = json_encode($res);
-
     header("HTTP/1.1 200 OK");
-    echo ($out);
+} else if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    if (isset($_GET['id'])) {
+        $productos = new DataBase('productos');
+        $where = array('id' => $_GET['id']);
+        $datos = array(
+            'nombre' => $_GET['nombre'],
+            'precioCompra' => $_GET['precioCompra'],
+            'precioVenta' => $_GET['precioVenta'],
+            //'imagen' => $_GET['imagen'],
+            'venta' => $_GET['venta']
+        );
+
+        $productos->update($datos, $where);
+
+        $res = array('resultado' => 'actualizado', 'mensaje' => 'Se actualizó el producto');
+
+        header("HTTP/1.1 200 OK");
+    } else {
+        header("HTTP/1.1 401 Bad Request");
+        $res = array('resultado'=>'error','mensaje'=>'No se recibió la información necesaria');
+    }
 }
+
+echo json_encode($res);
